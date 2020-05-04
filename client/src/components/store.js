@@ -8,7 +8,7 @@ export function updateToken(token) {
     if(token) {
         window.localStorage.setItem('token', token);
     } else {
-        window.localStorage.removeItem('login');
+        window.localStorage.removeItem('token');
     }
     token$.next(token);
 }

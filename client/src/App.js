@@ -5,6 +5,7 @@ import{ HelmetProvider } from 'react-helmet-async';
 //import Header from './components/Header';
 import Login from './components/Login';
 import Main from './components/Main';
+import Room from './components/Room';
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <main>
           <Route path = '/' exact component = {Login} />
           <Route path = '/main' component = {Main} />
+          <Route path = '/room' component = {Room} />
         </main>
       </Router>
     </HelmetProvider>

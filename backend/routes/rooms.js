@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
         });
 });
 
-// GET ONE ROOM BY ID
+/*// GET ONE ROOM BY ID
 router.get('/:id', (req, res) => {
     Room.findById(req.params.id)
         .then(room => {
@@ -23,18 +23,13 @@ router.get('/:id', (req, res) => {
             console.error(error);
             res.status(500).end();  
         });
-});
+});*/
 
 // SAVE ALL ROOMS
 router.post('/', (req, res) => {
-    const username = req.body.username;
-    const message = req.body.message;
-    
-    const newRoom = new Room({
-        username, 
-        message,
-    });
-
+    console.log('hej      ' + req.body.roomTitle);
+    const roomTitle = req.body.roomTitle;
+    const newRoom = new Room({roomTitle});
     newRoom.save()
         .then(() => {
             console.log('new room is created');
@@ -46,7 +41,7 @@ router.post('/', (req, res) => {
         });
 });
 
-// UPDATE ROOM
+/*// UPDATE ROOM
 router.patch('/:id', (req,res) => {
     Room.findByIdAndUpdate(req.params.id)
         .then(() => {
@@ -57,11 +52,13 @@ router.patch('/:id', (req,res) => {
         console.error(error);
         res.status(201).send(post);
         });
-});
+});*/
 
 // DELETE ROOM
 router.delete('/:id', (req,res) => {
-    Room.findByIdAndRemove(req.params.id)
+    console.log(req.body._id);
+    
+    Room.findByIdAndDelete(req.params.id)
         .then(() => {
             console.log('deleted: ' + req.params.id);
             res.status(201).send();
@@ -71,7 +68,8 @@ router.delete('/:id', (req,res) => {
             res.status(400).end();
             
         })
-});
+    }); 
+
 
 
 module.exports = router;

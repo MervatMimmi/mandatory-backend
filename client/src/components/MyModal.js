@@ -33,16 +33,19 @@ export default function MyModal(props) {
     //const [rooms, setRooms] = useState([]);
     const [newRoom, setNewRoom] = useState([]);
 
-    const handleNewRoom = (e) => setNewRoom(e.target.value);
+    function handleNewRoom(e){
+        setNewRoom(e.target.value)
+    }
 
     function createRoom(e) {
         e.preventDefault();
-        const room = {newRoom: newRoom}
+        const room = {roomTitle: newRoom}
+        console.log(room);
 
-        axios.post('http://localhost:9090/rooms/', {room})
+        axios.post('/rooms', room)
             .then(response => {
                 console.log(response);
-                //roomList(response);
+                props.onUpload(response);
             })
             .catch(error => {
                 console.error(error);

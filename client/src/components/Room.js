@@ -3,11 +3,9 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-import { makeStyles, TextField, ListItemSecondaryAction } from '@material-ui/core';
+import { makeStyles, TextField } from '@material-ui/core';
 import { Paper, Typography, Button, List, ListItem, ListItemText , IconButton} from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
 import { token$, updateToken } from './store';
-import MyModal from './MyModal';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -39,13 +37,12 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function Main() {
-    const classes = useStyles();
-    const [modal, setModal] = useState(false);
-    const [rooms, updateRooms] = useState([]);
+const socket = io('http://localhost:3000');
 
-    const openModal = () => setModal(true)
-    const closeModal = () => setModal(false)
+export default function Room(props) {
+    const classes = useStyles();
+    const [message, updateMessage] = useState('');
+
     
     function onUpload(){
         handleRoomList()
@@ -66,19 +63,6 @@ export default function Main() {
             });
     }
 
-    function handleDelete(_id){
-        const id = { _id}
-        console.log(id);
-        
-        axios.delete('/rooms/:id', id)
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
-
     function logOut() {
         updateToken(null);
     }
@@ -89,12 +73,6 @@ export default function Main() {
                 {rooms.map((room, i) => (
                     <ListItem key = {i} button component = {Link} to= {`/room/${room._id}`}>
                         <ListItemText primary = {room.roomTitle} />
-                        <ListItemSecondaryAction>
-                            <IconButton aria-label = 'Delete'
-                                onClick = {() => {handleDelete(room._id)}}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </ListItemSecondaryAction>
                     </ListItem>
                 ))}
             </List>
@@ -108,23 +86,22 @@ export default function Main() {
                     MERN chat app
                 </Typography>
                 <Typography className = {classes.typography} variant = 'h5' component = 'h5'>
-                    Hello {token$.value} !
+                    Hello {token$.value}! 
                 </Typography>
                 <div className = {classes.flex}>
                     <div className = {classes.topicsWindow}>
-                        {!modal && <Button className = {classes.button}
-                            variant = 'contained'
-                            color = 'primary'
-                            onClick = {openModal}>
-                                Create
-                        </Button>}
-                       <MyModal closeModal = {closeModal} modal = {modal} onUpload = {onUpload} />
                         {roomList}
                        <Link to ='/' ><Button className = {classes.button}
                             variant = 'contained'
                             color = 'primary'
                             onClick = {logOut}>
                                 Logout
+                       </Button></Link>
+                       <Link to ='/main' ><Button className = {classes.button}
+                            variant = 'contained'
+                            color = 'primary'
+                            >
+                            Main
                        </Button></Link>
                     </div>
                     <div className = {classes.chatWindow}>
@@ -136,13 +113,11 @@ export default function Main() {
                         id = 'standard-name' 
                         label = 'Send a chat'
                         margin = 'normal'
-                        
                         />
                     <Button className = {classes.button}
                         variant = 'contained' color = 'primary'>
                             Send
                     </Button>
-
                 </div>
             </Paper>
         </div>

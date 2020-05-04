@@ -56,7 +56,7 @@ export default function Login() {
         const user = {username: username}
         console.log(user);
         
-        axios.post('http://localhost:9090/users/', user)
+        axios.post('/users', user)
             .then(response => {
                 console.log(response);
                 updateToken(username);
