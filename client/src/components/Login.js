@@ -36,7 +36,7 @@ const useStyles = makeStyles({
     form: {
         margin: '0',
         '& .MuiInput-underline:after': {
-            borderBottomColor: 'red',
+            borderBottomColor: 'primary',
         }
     }
 });

@@ -9,9 +9,6 @@ let roomSchema = new Schema ({
     message: {
         type: String,
     }, 
-    timestamp: {
-        type: Date,
-    }
 });
 
 module.exports = mongoose.model('Room', roomSchema);

@@ -31,7 +31,8 @@ router.post('/', (req, res) => {
     const message = req.body.message;
     
     const newRoom = new Room({
-        username, message
+        username, 
+        message,
     });
 
     newRoom.save()
