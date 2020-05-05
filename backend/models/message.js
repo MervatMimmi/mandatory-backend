@@ -9,10 +9,7 @@ let messageSchema = new Schema({
         type: String,
         required: true
     },
-    chatId: {
-        type:mongoose.Schema.Types.ObjectId,
-        required:true
-    }
 });
 
 module.exports = mongoose.model('Message', messageSchema);
+

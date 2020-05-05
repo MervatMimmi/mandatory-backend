@@ -1,5 +1,5 @@
 const router = require('express').Router();
-let Room = require('../models/room.model');
+let Room = require('../models/room');
 
 // GET ALL ROOMS
 router.get('/', (req, res) => {
@@ -12,18 +12,6 @@ router.get('/', (req, res) => {
             res.status(500).end(); 
         });
 });
-
-/*// GET ONE ROOM BY ID
-router.get('/:id', (req, res) => {
-    Room.findById(req.params.id)
-        .then(room => {
-            res.send(room);
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(500).end();  
-        });
-});*/
 
 // SAVE ALL ROOMS
 router.post('/', (req, res) => {
@@ -41,6 +29,55 @@ router.post('/', (req, res) => {
         });
 });
 
+router.get('/:id', (req, res) => {
+    Room.findById(req.params.id)
+        .then(room => {
+            res.send(room)
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(400).end();
+        });
+});
+
+router.delete('/:id/', (req, res) => {
+    console.log(req.params.id);
+    
+    let roomId = req.params.id;
+    console.log("roomId "+roomId);
+    Room.findByIdAndDelete(req.params.id)
+    .then(() => {
+        res.send('Room deleted')
+    })
+    .catch(error => {
+        console.error(error);
+        res.status(400).end();  
+    });
+    
+   /* Room.findByIdAndDelete({_id:req.params.id})
+        .then(() => {
+            res.send('Room deleted')
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(400).end();  
+        });*/
+})
+
+/*// GET ONE ROOM BY ID
+router.get('/:id', (req, res) => {
+    Room.findById(req.params.id)
+        .then(room => {
+            res.send(room);
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).end();  
+        });
+});*/
+
+
+
 /*// UPDATE ROOM
 router.patch('/:id', (req,res) => {
     Room.findByIdAndUpdate(req.params.id)
@@ -54,21 +91,6 @@ router.patch('/:id', (req,res) => {
         });
 });*/
 
-// DELETE ROOM
-router.delete('/:id', (req,res) => {
-    console.log(req.body._id);
-    
-    Room.findByIdAndDelete(req.params.id)
-        .then(() => {
-            console.log('deleted: ' + req.params.id);
-            res.status(201).send();
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(400).end();
-            
-        })
-    }); 
 
 
 

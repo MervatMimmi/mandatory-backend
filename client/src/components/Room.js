@@ -37,14 +37,41 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const socket = io('http://localhost:3000');
+//const socket = io('http://localhost:3001');
 
 export default function Room(props) {
     const classes = useStyles();
     const [message, updateMessage] = useState('');
+    const [messages, updateMessages] = useState([]);
+    const [users, updateUsers] = useState([]);
+    const [token, setToken] =useState(token$.value);
 
+    useEffect(() => {
+        const subscription = token$.subscribe(setToken);
+        return() => subscription.unsubscribe();
+    }, []);
+
+    function handleOnChange(e) {
+        updateMessage(e.target.value);
+    }
+
+    function sendMessage(e) {
+        e.preventDefault();
+
+        let data = {
+            message: message, 
+            messageBy: token$.value
+        };
+        console.log(data);
+        
+        axios.post('/messages', data)
+            .then(response => {
+                console.log(response.data);
+                
+            })
+    }
     
-    function onUpload(){
+    /*function onUpload(){
         handleRoomList()
     }
 
@@ -77,7 +104,7 @@ export default function Room(props) {
                 ))}
             </List>
         </div>
-    )
+    )*/
     
     return(
         <div>
@@ -90,11 +117,12 @@ export default function Room(props) {
                 </Typography>
                 <div className = {classes.flex}>
                     <div className = {classes.topicsWindow}>
-                        {roomList}
+                        {/*{roomList}*/}
                        <Link to ='/' ><Button className = {classes.button}
                             variant = 'contained'
                             color = 'primary'
-                            onClick = {logOut}>
+                            //onClick = {logOut}
+                            >
                                 Logout
                        </Button></Link>
                        <Link to ='/main' ><Button className = {classes.button}
@@ -113,9 +141,14 @@ export default function Room(props) {
                         id = 'standard-name' 
                         label = 'Send a chat'
                         margin = 'normal'
+                        value = {message}
+                        onChange = {handleOnChange}
                         />
                     <Button className = {classes.button}
-                        variant = 'contained' color = 'primary'>
+                        variant = 'contained' 
+                        color = 'primary'
+                        onClick = {sendMessage}
+                        >
                             Send
                     </Button>
                 </div>

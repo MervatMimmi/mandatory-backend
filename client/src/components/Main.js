@@ -66,11 +66,10 @@ export default function Main() {
             });
     }
 
-    function handleDelete(_id){
-        const id = { _id}
-        console.log(id);
+    function handleDelete(roomId){
+        console.log(roomId);
         
-        axios.delete('/rooms/:id', id)
+        axios.delete('/rooms/' + roomId)
             .then(response => {
                 console.log(response.data);
             })

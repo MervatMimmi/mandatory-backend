@@ -30,6 +30,8 @@ app.use('/users', usersRouter);
 const roomsRouter = require('./routes/rooms');
 app.use('/rooms', roomsRouter);
 
+
+
 io.on('connection', function(socket) {
     console.log('a user connected');
     socket.on('SEND_MESSAGE', function(data) {
