@@ -39,6 +39,8 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+const socket = io('http://localhost:9090');
+
 export default function Main() {
     const classes = useStyles();
     const [modal, setModal] = useState(false);

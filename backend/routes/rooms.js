@@ -1,5 +1,6 @@
 const router = require('express').Router();
 let Room = require('../models/room');
+let Message = require('../models/message');
 
 // GET ALL ROOMS
 router.get('/', (req, res) => {
@@ -29,7 +30,8 @@ router.post('/', (req, res) => {
         });
 });
 
-router.get('/:id', (req, res) => {
+// GET ONE ROOM
+router.get('/:id/', (req, res) => {
     Room.findById(req.params.id)
         .then(room => {
             res.send(room)
@@ -40,6 +42,7 @@ router.get('/:id', (req, res) => {
         });
 });
 
+// DELETE ONE ROOM
 router.delete('/:id/', (req, res) => {
     console.log(req.params.id);
     
@@ -53,45 +56,35 @@ router.delete('/:id/', (req, res) => {
         console.error(error);
         res.status(400).end();  
     });
-    
-   /* Room.findByIdAndDelete({_id:req.params.id})
-        .then(() => {
-            res.send('Room deleted')
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(400).end();  
-        });*/
 })
 
-/*// GET ONE ROOM BY ID
-router.get('/:id', (req, res) => {
-    Room.findById(req.params.id)
-        .then(room => {
-            res.send(room);
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(500).end();  
-        });
-});*/
-
-
-
-/*// UPDATE ROOM
-router.patch('/:id', (req,res) => {
-    Room.findByIdAndUpdate(req.params.id)
+//save chat in a room
+router.post('/room', (req, res) => {
+    let newMsg = new Message({
+        message: req.body.message,
+        messageBy: req.body.messageBy,
+    });
+    newMsg.save()
         .then(() => {
-            console.log('changed: ' + req.params.id);
+            console.log('msg saved');
             res.status(201).send();
         })
         .catch(error => {
-        console.error(error);
-        res.status(201).send(post);
+            console.error(error);
+            res.status(400).end();
         });
-});*/
+});
 
-
-
+//Get chat in a room
+router.get('/room/:id' , (req, res) => {
+    Message.find()
+        .then(messages =>{
+            res.send(messages);
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).end();
+        });
+});
 
 module.exports = router;

@@ -4,8 +4,9 @@ import axios from 'axios';
 import io from 'socket.io-client';
 
 import { makeStyles, TextField } from '@material-ui/core';
-import { Paper, Typography, Button, List, ListItem, ListItemText , IconButton} from '@material-ui/core';
+import { Paper, Typography, Button, Chip, List, ListItem, ListItemText , IconButton} from '@material-ui/core';
 import { token$, updateToken } from './store';
+import zIndex from '@material-ui/core/styles/zIndex';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -37,18 +38,34 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-//const socket = io('http://localhost:3001');
+const socket = io('http://localhost:9090');
 
 export default function Room(props) {
     const classes = useStyles();
     const [message, updateMessage] = useState('');
     const [messages, updateMessages] = useState([]);
-    const [users, updateUsers] = useState([]);
     const [token, setToken] =useState(token$.value);
 
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         return() => subscription.unsubscribe();
+    }, []);
+
+    useEffect(()=> {
+        socket.on('RECEIVE_MESSAGE', function(data){
+            updateMessages(x => x.concat(data));
+        });
+        axios.get('/rooms/room/:id')
+            .then(response => {
+                console.log(response.data);
+                updateMessages(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+            return()=> {
+                socket.off('socket off');
+            };
     }, []);
 
     function handleOnChange(e) {
@@ -59,16 +76,15 @@ export default function Room(props) {
         e.preventDefault();
 
         let data = {
-            message: message, 
-            messageBy: token$.value
+            message: message,
+            messageBy: token,
         };
         console.log(data);
         
-        axios.post('/messages', data)
+        axios.post('/rooms/room', data)
             .then(response => {
                 console.log(response.data);
-                
-            })
+            });
     }
     
     /*function onUpload(){
@@ -133,7 +149,17 @@ export default function Room(props) {
                        </Button></Link>
                     </div>
                     <div className = {classes.chatWindow}>
-
+                        {
+                            messages.map((msg, i) => (
+                                <div className = {classes.flex} key = {i}>
+                                    <Chip className = {classes.chip}
+                                        label = {msg.messageBy}/>
+                                        <Typography variant = 'body1'>
+                                            {msg.message}
+                                        </Typography>
+                                </div>
+                            ))
+                        }
                     </div>
                 </div>
                 <div className = {classes.flex}>

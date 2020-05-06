@@ -30,7 +30,6 @@ const useStyles = makeStyles(theme => ({
 export default function MyModal(props) {
     const classes = useStyles();
     const {modal, closeModal} = props;
-    //const [rooms, setRooms] = useState([]);
     const [newRoom, setNewRoom] = useState([]);
 
     function handleNewRoom(e){
