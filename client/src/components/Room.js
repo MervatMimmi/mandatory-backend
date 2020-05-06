@@ -45,6 +45,7 @@ export default function Room(props) {
     const [message, updateMessage] = useState('');
     const [messages, updateMessages] = useState([]);
     const [token, setToken] =useState(token$.value);
+    const [users, updateUsers] = useState([]);
 
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
@@ -84,6 +85,10 @@ export default function Room(props) {
         axios.post('/rooms/room', data)
             .then(response => {
                 console.log(response.data);
+                updateMessage('');
+            })
+            .catch(error => {
+                console.error(error);
             });
     }
     

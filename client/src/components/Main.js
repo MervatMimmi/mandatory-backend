@@ -74,6 +74,7 @@ export default function Main() {
         axios.delete('/rooms/' + roomId)
             .then(response => {
                 console.log(response.data);
+                updateRooms(rooms.filter(el => el._id !== roomId))
             })
             .catch(error => {
                 console.error(error);
