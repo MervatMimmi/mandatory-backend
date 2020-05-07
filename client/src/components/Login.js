@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { sizing } from '@material-ui/system';
 import { Grid, Card, CardHeader, TextField } from '@material-ui/core';
 import axios from 'axios';
 

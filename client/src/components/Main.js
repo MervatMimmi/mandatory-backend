@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 
 const socket = io('http://localhost:9090');
 
-export default function Main() {
+export default function Main(props) {
     const classes = useStyles();
     const [modal, setModal] = useState(false);
     const [rooms, updateRooms] = useState([]);
@@ -56,7 +56,7 @@ export default function Main() {
     useEffect(() => {
         handleRoomList();
     }, []);
-
+    
     function handleRoomList() {
         axios.get('/rooms')
             .then(response => {
@@ -88,8 +88,8 @@ export default function Main() {
     const roomList = (
         <div>
             <List>
-                {rooms.map((room, i) => (
-                    <ListItem key = {i} button component = {Link} to= {`/room/${room._id}`}>
+                {rooms.map(room => 
+                    <ListItem key = {room._id} component = {Link} {...{to: `/room/${room._id}`}}>    
                         <ListItemText primary = {room.roomTitle} />
                         <ListItemSecondaryAction>
                             <IconButton aria-label = 'Delete'
@@ -98,10 +98,12 @@ export default function Main() {
                             </IconButton>
                         </ListItemSecondaryAction>
                     </ListItem>
-                ))}
+                )}
             </List>
         </div>
     )
+    
+   
     
     return(
         <div>
@@ -133,7 +135,7 @@ export default function Main() {
 
                     </div>
                 </div>
-                <div className = {classes.flex}>
+               {/* <div className = {classes.flex}>
                     <TextField className = {classes.chatBox}
                         id = 'standard-name' 
                         label = 'Send a chat'
@@ -145,7 +147,7 @@ export default function Main() {
                             Send
                     </Button>
 
-                </div>
+                </div>*/}
             </Paper>
         </div>
     )

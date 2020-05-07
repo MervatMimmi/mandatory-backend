@@ -2,7 +2,13 @@ const router = require('express').Router();
 let Room = require('../models/room');
 let Message = require('../models/message');
 
-// GET ALL ROOMS
+const express = require('express');
+const server = require('http').Server(express);
+const io = require('socket.io')(server);
+
+
+
+// Get a list of all chat rooms
 router.get('/', (req, res) => {
     Room.find()
         .then(rooms => {
@@ -14,27 +20,41 @@ router.get('/', (req, res) => {
         });
 });
 
-// SAVE ALL ROOMS
+// Post api/create room with a roomTitle
 router.post('/', (req, res) => {
     console.log('hej      ' + req.body.roomTitle);
     const roomTitle = req.body.roomTitle;
-    const newRoom = new Room({roomTitle});
-    newRoom.save()
-        .then(() => {
-            console.log('new room is created');
-            res.status(201).send();
+    Room.find({roomTitle:roomTitle})
+        .then(room =>{
+            if(room.length === 0){
+                console.log("Room doesn't exist, create room: "+ roomTitle);
+                const newRoom = new Room({roomTitle});
+                newRoom.save()
+                    .then(() => {
+                        console.log('new room is created');
+                        res.status(201).send();
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        res.status(400);
+                    });
+            }else{
+                console.log("Room already exist, dont create room: "+roomTitle);
+                res.status(400); 
+            }  
         })
         .catch(error => {
             console.error(error);
-            res.status(400).end();
+            res.status(500).end();
         });
+    
 });
 
-// GET ONE ROOM
+// get one room by id
 router.get('/:id/', (req, res) => {
     Room.findById(req.params.id)
         .then(room => {
-            res.send(room)
+            res.status(200).send(room)
         })
         .catch(error => {
             console.error(error);
@@ -42,7 +62,7 @@ router.get('/:id/', (req, res) => {
         });
 });
 
-// DELETE ONE ROOM
+// Delete api room
 router.delete('/:id/', (req, res) => {
     console.log(req.params.id);
     
@@ -56,18 +76,32 @@ router.delete('/:id/', (req, res) => {
         console.error(error);
         res.status(400).end();  
     });
-})
+});
 
-//save chat in a room
-router.post('/room', (req, res) => {
+//Post api room id, username, message
+
+router.post('/room/:id', (req, res) => {
+    
+    const chatRoomId = req.params.id;
     let newMsg = new Message({
+        chatRoomId: chatRoomId,
         message: req.body.message,
         messageBy: req.body.messageBy,
     });
     newMsg.save()
         .then(() => {
             console.log('msg saved');
+           
+            
+            io.emit('newMsg', newMsg);
             res.status(201).send();
+            /*
+            io.on('connection',(socket) => {
+                console.log('rooms: a user connected');
+                socket.emit('newMsg', newMsg); 
+            });
+            */
+                
         })
         .catch(error => {
             console.error(error);
@@ -75,9 +109,9 @@ router.post('/room', (req, res) => {
         });
 });
 
-//Get chat in a room
+//Get chat details in a room
 router.get('/room/:id' , (req, res) => {
-    Message.find()
+   Message.find({chatRoomId:req.params.id})
         .then(messages =>{
             res.send(messages);
         })

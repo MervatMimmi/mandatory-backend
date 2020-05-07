@@ -9,6 +9,11 @@ let messageSchema = new Schema({
         type: String,
         required: true
     },
+    chatRoomId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Message',
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Message', messageSchema);
