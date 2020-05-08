@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
-import io from 'socket.io-client';
 
-import { makeStyles, TextField, ListItemSecondaryAction } from '@material-ui/core';
+import { makeStyles, ListItemSecondaryAction } from '@material-ui/core';
 import { Paper, Typography, Button, List, ListItem, ListItemText , IconButton} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { token$, updateToken } from './store';
@@ -38,8 +38,6 @@ const useStyles = makeStyles(theme => ({
         width: '15%',
     }
 }));
-
-const socket = io('http://localhost:9090');
 
 export default function Main(props) {
     const classes = useStyles();
@@ -107,6 +105,9 @@ export default function Main(props) {
     
     return(
         <div>
+            <Helmet>
+                <title>Main</title>
+            </Helmet>
             <Paper className = {classes.root}>
                 <Typography className = {classes.typography} variant = 'h4' component = 'h4'>
                     MERN chat app

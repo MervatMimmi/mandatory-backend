@@ -31,11 +31,11 @@ connection.once('open', () => {
 const usersRouter = require('./routes/users');
 app.use('/users', usersRouter);
 
-//const roomsRouter = require('./routes/rooms');
-app.use('/rooms', router);
+const roomsRouter = require('./routes/rooms');
+app.use('/rooms', roomsRouter(io));
+
 io.on('connection',(socket) => {
     console.log('server: a user connected');
-   
 });
 
 server.listen(PORT, function() {
@@ -44,7 +44,7 @@ server.listen(PORT, function() {
 
 
 
-
+/*
 // Get a list of all chat rooms
 router.get('/', (req, res) => {
     Room.find()
@@ -73,11 +73,11 @@ router.post('/', (req, res) => {
                     })
                     .catch(error => {
                         console.error(error);
-                        res.status(400);
+                        res.status(404);
                     });
             }else{
                 console.log("Room already exist, dont create room: "+roomTitle);
-                res.status(400); 
+                res.status(400).send(); 
             }  
         })
         .catch(error => {
@@ -149,4 +149,4 @@ router.get('/room/:id' , (req, res) => {
         });
 });
 
-module.exports = router;
+module.exports = router;*/

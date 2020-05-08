@@ -41,10 +41,9 @@ const useStyles = makeStyles({
 });
 
 export default function Login() {
+    const classes = useStyles(); 
     const [username, setUsername] = useState('');
     const [login, setLogin] = useState(false);
-
-    const classes = useStyles(); 
 
     function handleOnChange(e) {
        setUsername(e.target.value)

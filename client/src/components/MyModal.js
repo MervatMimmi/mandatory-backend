@@ -29,6 +29,7 @@ export default function MyModal(props) {
     const classes = useStyles();
     const {modal, closeModal} = props;
     const [newRoom, setNewRoom] = useState([]);
+    const[errorMsg, updateErrorMsg] = useState('')
 
     function handleNewRoom(e){
         setNewRoom(e.target.value)

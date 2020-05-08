@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import io from 'socket.io-client';
 
@@ -65,15 +66,13 @@ export default function Room(props) {
     useEffect(()=> {
         axios.get('/rooms/room/' +roomId)
             .then(response => {
-                //console.log(response.data);
+                console.log(response.data);
                 updateData(response.data);
             })
             .catch(error => {
                 console.error(error);
             });
-            return () => {
-                socket.off("newMsg");
-            };
+           
     }, [messages,roomId]); 
     
     socket.on('newMsg', (data) => {
@@ -108,6 +107,9 @@ export default function Room(props) {
     
     return(
         <div>
+            <Helmet>
+                <title>Home</title>
+            </Helmet>
             <Paper className = {classes.root}>
                 <form onSubmit = {sendMessage}>
                     <Typography className = {classes.typography} variant = 'h4' component = 'h4'>
