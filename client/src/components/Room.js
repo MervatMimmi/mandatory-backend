@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 
 import { makeStyles, TextField } from '@material-ui/core';
 import { Paper, Typography, Button, Chip} from '@material-ui/core';
-import { token$ } from './store';
+import { token$, updateToken } from './store';
 
 
 const useStyles = makeStyles(theme => ({
@@ -64,6 +64,11 @@ export default function Room(props) {
 
     
     useEffect(()=> {
+        socket.on('newMsg', (data) => {
+            console.log('FUUUNKAAAAAR: '+data);
+            updateMessages(x => x.concat(data));
+          });
+    
         axios.get('/rooms/room/' +roomId)
             .then(response => {
                 console.log(response.data);
@@ -72,14 +77,13 @@ export default function Room(props) {
             .catch(error => {
                 console.error(error);
             });
+            return() => {
+                socket.off();
+            }
            
     }, [messages,roomId]); 
     
-    socket.on('newMsg', (data) => {
-        console.log('FUUUNKAAAAAR: '+data);
-        updateMessages(x => x.concat(data));
-      });
-
+    
     function handleOnChange(e) {
         updateMessage(e.target.value);
     }
@@ -103,6 +107,10 @@ export default function Room(props) {
                 console.error(error);
             });
             updateMessage('');
+    }
+
+    function logOut() {
+        updateToken(null);
     }
     
     return(
