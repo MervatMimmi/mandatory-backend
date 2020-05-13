@@ -57,6 +57,7 @@ export default function Room(props) {
     const roomId = path[2];
     //console.log(roomId);
     
+    
     useEffect(() => {
         const subscription = token$.subscribe(setToken);
         return() => subscription.unsubscribe();
@@ -80,9 +81,9 @@ export default function Room(props) {
             return() => {
                 socket.off();
             }
-           
     }, [messages,roomId]); 
     
+
     
     function handleOnChange(e) {
         updateMessage(e.target.value);

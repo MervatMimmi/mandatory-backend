@@ -12,3 +12,4 @@ export function updateToken(token) {
     }
     token$.next(token);
 }
+
